@@ -18,21 +18,13 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private MyAuthenticationProvider authenticationProvider;
-
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-//		UserDetails user = User.withUsername("tom").password(passwordEncoder.encode("cruise")).authorities("read").build();
-//		userDetailsService.createUser(user);
-//		
-//		auth.userDetailsService(userDetailsService);
-//	}
-
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
+		InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
+		UserDetails user = User.withUsername("tom").password(passwordEncoder.encode("cruise")).authorities("read").build();
+		userDetailsService.createUser(user);
+
+		auth.userDetailsService(userDetailsService);
 	}
 
 	@Override
