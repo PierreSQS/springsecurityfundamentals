@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,10 +43,18 @@ class HelloControllerTest {
     }
 
     @Test
-    void helloWithAuthenticatedUser() throws Exception {
+    void helloRedirectToLoginPage() throws Exception {
+        // httpBasic doesn't work here since formlogin-Authentication
         mockMvc.perform(get("/hello").with(httpBasic("tom","cruise")))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
+
+    @Test
+    void helloAuthenticatedWithLoginPage() throws Exception {
+        // httpBasic doesn't work here since formlogin-Authentication
+        mockMvc.perform(formLogin().user("tom").password("cruise"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Spring Security Rocks!!")))
                 .andDo(print());
     }
 }
