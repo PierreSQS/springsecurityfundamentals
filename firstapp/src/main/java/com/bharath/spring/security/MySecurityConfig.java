@@ -14,7 +14,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-		UserDetails user = User.withUsername("tom").password("{bcrypt}$2a$10$Yi40NcoB5pl9mTGn1VJsQ.eH27E2YCUw2DiYpzk.OQPC6M0sBDFEW").authorities("read").build();
+		UserDetails user = User.withUsername("tom").password("{noop}cruise").authorities("read").build();
 		userDetailsService.createUser(user);
 
 		auth.userDetailsService(userDetailsService);
