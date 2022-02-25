@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,9 +53,9 @@ class HelloControllerTest {
 
     @Test
     void helloAuthenticatedWithLoginPage() throws Exception {
-        // httpBasic doesn't work here since formlogin-Authentication
+        // correct way (compare to test above)
         mockMvc.perform(formLogin().user("tom").password("cruise"))
-                .andExpect(status().isOk())
+                .andExpect(authenticated())
                 .andDo(print());
     }
 }
