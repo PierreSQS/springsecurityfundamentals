@@ -16,10 +16,10 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
-		if ("tom".equals(userName) && "cruise".equals(password)) {
+		if (userName.equals("tom") && password.equals("cruise")) {
 			return new UsernamePasswordAuthenticationToken(userName, password, Arrays.asList());
 		} else {
-			throw new BadCredentialsException("Invalid Username or Passwrod");
+			throw new BadCredentialsException("Invalid Username or Password");
 		}
 	}
 
