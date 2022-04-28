@@ -2,15 +2,17 @@ package com.bharath.springcloud.controllers;
 
 import com.bharath.springcloud.model.Coupon;
 import com.bharath.springcloud.repos.CouponRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/couponapi")
 public class CouponRestController {
 
-	@Autowired
-	CouponRepo repo;
+	private final CouponRepo repo;
+
+	public CouponRestController(CouponRepo repo) {
+		this.repo = repo;
+	}
 
 	@PostMapping("/coupons")
 	public Coupon create(@RequestBody Coupon coupon) {
