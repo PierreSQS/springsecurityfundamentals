@@ -25,11 +25,16 @@ public class ProductRestController {
 	}
 
 	@PostMapping("/products")
-	public Product create(@RequestBody Product product) {
+	public Product createProduct(@RequestBody Product product) {
 		Coupon coupon = restTemplate.getForObject(couponServiceURL + product.getCouponCode(), Coupon.class);
 		product.setPrice(product.getPrice().subtract(coupon.getDiscount()));
 		return repo.save(product);
 
+	}
+
+	@GetMapping("/products/{id}")
+	public Product findProductByID(@PathVariable Long id) {
+		return repo.findById(id).orElse(null);
 	}
 
 }
