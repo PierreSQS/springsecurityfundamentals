@@ -1,6 +1,5 @@
 package com.bharath.springcloud.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -13,14 +12,17 @@ import com.bharath.springcloud.repos.ProductRepo;
 @RequestMapping("/productapi")
 public class ProductRestController {
 
-	@Autowired
-	private ProductRepo repo;
+	private final ProductRepo repo;
 
-	@Autowired
-	private RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
 	@Value("${couponService.url}")
 	private String couponServiceURL;
+
+	public ProductRestController(ProductRepo repo, RestTemplate restTemplate) {
+		this.repo = repo;
+		this.restTemplate = restTemplate;
+	}
 
 	@PostMapping("/products")
 	public Product create(@RequestBody Product product) {
