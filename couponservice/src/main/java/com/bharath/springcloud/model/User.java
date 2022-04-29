@@ -7,7 +7,6 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
     private String firstName;
     private String lastName;
@@ -16,7 +15,7 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "roles_id"))
+            joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public Long getId() {
