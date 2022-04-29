@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS bharhatspringsecuritydb;
+CREATE DATABASE IF NOT EXISTS bharhatspringsecuritydb ;
 USE bharhatspringsecuritydb;
 
 CREATE TABLE product(
