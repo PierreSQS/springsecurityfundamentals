@@ -3,6 +3,7 @@ package com.bharath.springcloud.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Role implements GrantedAuthority {
@@ -11,6 +12,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     public Long getId() {
         return id;
