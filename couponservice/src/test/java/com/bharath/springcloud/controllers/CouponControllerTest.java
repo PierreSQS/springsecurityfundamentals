@@ -1,15 +1,27 @@
 package com.bharath.springcloud.controllers;
 
+import com.bharath.springcloud.model.Coupon;
+import com.bharath.springcloud.repos.CouponRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -19,6 +31,24 @@ class CouponControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    CouponRepo couponRepoMock;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Captor
+    ArgumentCaptor<Coupon> couponArgumentCaptor;
+
+    private Coupon coupon;
+
+    @BeforeEach
+    void setUp() {
+        coupon = new Coupon();
+        coupon.setCode("SUPERSALE");
+        coupon.setDiscount(BigDecimal.valueOf(10));
+        coupon.setExpDate("22-04-2021");
+    }
     @WithMockUser
     @Test
     void index() throws Exception {
@@ -36,6 +66,27 @@ class CouponControllerTest {
                 .andExpect(view().name("createCoupon"))
                 .andExpect(content().string(containsString("Create Coupon")))
                 .andDo(print());
+    }
+
+    @Test
+    void saveCoupon() throws Exception {
+        // Given
+        given(couponRepoMock.save(couponArgumentCaptor.capture())).willReturn(coupon);
+
+        // When, Then
+        String content = objectMapper.writeValueAsString(coupon);
+        System.out.println("#### The sent Content: "+content);
+        mockMvc.perform(post("/saveCoupon")
+                            .with(user("pierrot mockadmin")
+                            .roles("ADMIN"))
+                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                            .content(content))
+                .andExpect(status().isOk())
+                .andExpect(view().name("createCouponResponse"))
+                .andExpect(content().string(containsString("Create Coupon Response")))
+                .andDo(print());
+
+        assertThat(couponArgumentCaptor.getValue().getCode()).isEqualToIgnoringCase("SUPERSALE");
     }
 
 }
