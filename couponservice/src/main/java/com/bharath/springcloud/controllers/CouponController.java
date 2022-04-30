@@ -10,4 +10,10 @@ public class CouponController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("showCreateCoupon")
+    public String showCreateCoupon() {
+        return "createCoupon";
+    }
+
 }
