@@ -18,8 +18,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/","index").hasAnyRole("ADMIN, USER")
                 .mvcMatchers(HttpMethod.POST,"/couponapi/coupons").hasRole("ADMIN")
+                .anyRequest().denyAll()
             .and()
                 .httpBasic()
+            .and()
+                .formLogin()
             .and()
                 .csrf().disable();
     }
