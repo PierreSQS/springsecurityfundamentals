@@ -72,10 +72,10 @@ class CouponControllerTest {
 
         // When, Then
         mockMvc.perform(post("/saveCoupon")
-                            .with(user("pierrot mockadmin")
-                            .roles("ADMIN"))
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .content("code=SUPERSALE&discount=15&expDate=15-08-2022"))
+                        .with(user("pierrot mockadmin")
+                                .roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .content("code=SUPERSALE&discount=15&expDate=15-08-2022"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("createCouponResponse"))
                 .andExpect(content().string(containsString("Create Coupon Response")))
@@ -91,13 +91,15 @@ class CouponControllerTest {
 
         // When, Then
         mockMvc.perform(post("/getCoupon")
-                        .with(user("pierrot mockadmin")
-                                .roles("ADMIN"))
+                        .with(user("pierrot mockadmin").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .content("code=SUPERSALE"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("couponDetails"))
                 .andExpect(model().attributeExists( "coupon"))
+                .andExpect(content().string(containsString("Code:<b>SUPERSALE</b>")))
+                .andExpect(content().string(containsString("Discount:<b>10</b>")))
+                .andExpect(content().string(containsString("Expiry Date:<b>22-04-2021</b>")))
                 .andDo(print());
 
     }
