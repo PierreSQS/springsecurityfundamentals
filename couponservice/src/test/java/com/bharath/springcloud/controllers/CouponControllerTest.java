@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -83,4 +84,21 @@ class CouponControllerTest {
         assertThat(couponArgumentCaptor.getValue().getCode()).isEqualToIgnoringCase("SUPERSALE");
     }
 
+    @Test
+    void getCoupon() throws Exception {
+        // Given
+        given(couponRepoMock.findByCode(anyString())).willReturn(coupon);
+
+        // When, Then
+        mockMvc.perform(post("/getCoupon")
+                        .with(user("pierrot mockadmin")
+                                .roles("ADMIN"))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .content("code=SUPERSALE"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("couponDetails"))
+                .andExpect(model().attributeExists( "coupon"))
+                .andDo(print());
+
+    }
 }
