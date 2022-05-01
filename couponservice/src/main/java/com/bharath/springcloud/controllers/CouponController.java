@@ -5,7 +5,6 @@ import com.bharath.springcloud.repos.CouponRepo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class CouponController {
@@ -27,7 +26,7 @@ public class CouponController {
     }
 
     @PostMapping(value = "saveCoupon")
-    public String saveCoupon(@RequestBody Coupon coupon) {
+    public String saveCoupon(Coupon coupon) {
         couponRepo.save(coupon);
         return "createCouponResponse";
     }

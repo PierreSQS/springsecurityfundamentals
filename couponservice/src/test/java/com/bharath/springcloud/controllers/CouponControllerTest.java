@@ -2,7 +2,6 @@ package com.bharath.springcloud.controllers;
 
 import com.bharath.springcloud.model.Coupon;
 import com.bharath.springcloud.repos.CouponRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -33,9 +32,6 @@ class CouponControllerTest {
 
     @MockBean
     CouponRepo couponRepoMock;
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Captor
     ArgumentCaptor<Coupon> couponArgumentCaptor;
@@ -74,13 +70,11 @@ class CouponControllerTest {
         given(couponRepoMock.save(couponArgumentCaptor.capture())).willReturn(coupon);
 
         // When, Then
-        String content = objectMapper.writeValueAsString(coupon);
-        System.out.println("#### The sent Content: "+content);
         mockMvc.perform(post("/saveCoupon")
                             .with(user("pierrot mockadmin")
                             .roles("ADMIN"))
-                            .contentType(MediaType.APPLICATION_JSON_UTF8)
-                            .content(content))
+                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .content("code=SUPERSALE&discount=15&expDate=15-08-2022"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("createCouponResponse"))
                 .andExpect(content().string(containsString("Create Coupon Response")))
