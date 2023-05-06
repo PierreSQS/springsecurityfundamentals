@@ -1,4 +1,4 @@
-use bharath-security-sect4-chap28-db;
+use bharath_security_sect4_chap28_db;
 
 create table product(
 id int AUTO_INCREMENT PRIMARY KEY,
