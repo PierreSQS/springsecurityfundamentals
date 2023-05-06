@@ -32,8 +32,8 @@ public class ProductRestController {
 	}
 
 	@GetMapping("/products/{productID}")
-	public Product getProduct(@PathVariable Long productID) {
-		return productRepo.findById(productID).orElse(null);
+	public Product getProductByID(@PathVariable Long productId) {
+		return productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product Not Found!!"));
 	}
 
 
