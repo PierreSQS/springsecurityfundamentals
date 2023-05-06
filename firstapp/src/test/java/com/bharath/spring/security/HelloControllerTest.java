@@ -47,10 +47,9 @@ class HelloControllerTest {
 
     @Test
     void helloRedirectToLoginPage() throws Exception {
-        // before SB3.0.x httpBasic wasn't work here since formlogin-Authentication
-        // httpBasic seems to be set by default with SB3.0.x. TOCHECK Documentation!!
+        // httpBasic doesn't work here since formlogin-Authentication
         mockMvc.perform(get("/hello").with(httpBasic("tom","cruise")))
-                .andExpect(status().isOk())
+                .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
 
