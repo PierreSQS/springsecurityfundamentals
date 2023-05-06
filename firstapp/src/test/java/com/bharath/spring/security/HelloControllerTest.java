@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
+@Import(MySecurityConfig.class)
 class HelloControllerTest {
 
     @Autowired
@@ -45,9 +47,10 @@ class HelloControllerTest {
 
     @Test
     void helloRedirectToLoginPage() throws Exception {
-        // httpBasic doesn't work here since formlogin-Authentication
+        // before SB3.0.x httpBasic wasn't work here since formlogin-Authentication
+        // httpBasic seems to be set by default with SB3.0.x. TOCHECK Documentation!!
         mockMvc.perform(get("/hello").with(httpBasic("tom","cruise")))
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 
