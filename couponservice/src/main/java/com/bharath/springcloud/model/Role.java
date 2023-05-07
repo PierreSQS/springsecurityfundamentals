@@ -3,7 +3,7 @@ package com.bharath.springcloud.model;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
