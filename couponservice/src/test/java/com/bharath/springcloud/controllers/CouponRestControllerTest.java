@@ -15,15 +15,19 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = {CouponRestControllerTest.class})
+@WebMvcTest(controllers = {CouponRestController.class})
 @Import({SecurityConfig.class})
 class CouponRestControllerTest {
 
-    private Coupon coupon;
+    Coupon coupon;
 
     @Autowired
     MockMvc mockMvc;
@@ -34,7 +38,7 @@ class CouponRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
-    private CouponRepo couponRepo;
+    CouponRepo couponRepo;
 
     @BeforeEach
     void setUp() {
@@ -46,11 +50,23 @@ class CouponRestControllerTest {
 
     @Test
     void create() throws Exception {
+        // given
+        Coupon savedCoupon = new Coupon();
+        savedCoupon.setCode(coupon.getCode());
+        savedCoupon.setDiscount(coupon.getDiscount());
+        savedCoupon.setExpDate(coupon.getExpDate());
+        savedCoupon.setId(1L);
+
+        given(couponRepoMock.save(any())).willReturn(savedCoupon);
+
         mockMvc.perform(post("/couponapi/coupons")
                         .with(user("mock@bailey.com").password("pwd").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(coupon)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.code").value("SUPERSALE"))
+                .andDo(print());
     }
 
     @Test
