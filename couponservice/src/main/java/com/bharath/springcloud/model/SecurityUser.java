@@ -1,11 +1,10 @@
 package com.bharath.springcloud.model;
 
+import jakarta.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Transient;
 import java.util.Collection;
-import java.util.HashSet;
 
 public class SecurityUser implements UserDetails {
 
@@ -18,7 +17,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new HashSet<>(user.getRoles());
+        return user.getRoles();
     }
 
     @Override
