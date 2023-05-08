@@ -70,16 +70,6 @@ class CouponRestControllerTest {
 
     @Test
     void createCouponNotAdmin() throws Exception {
-        // given
-        Coupon savedCoupon = new Coupon();
-        savedCoupon.setCode(coupon.getCode());
-        savedCoupon.setDiscount(coupon.getDiscount());
-        savedCoupon.setExpDate(coupon.getExpDate());
-        savedCoupon.setId(1L);
-
-        given(couponRepoMock.save(any())).willReturn(savedCoupon);
-
-        // when , then
         mockMvc.perform(post("/couponapi/coupons")
                         .with(user("mockuser@bailey.com").password("pwd").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -110,16 +100,6 @@ class CouponRestControllerTest {
 
     @Test
     void getCouponNotAuthenticated() throws Exception {
-        // given
-        Coupon savedCoupon = new Coupon();
-        savedCoupon.setCode(coupon.getCode());
-        savedCoupon.setDiscount(coupon.getDiscount());
-        savedCoupon.setExpDate(coupon.getExpDate());
-        savedCoupon.setId(1L);
-
-        given(couponRepoMock.findByCode(any())).willReturn(savedCoupon);
-
-        // when , then
         mockMvc.perform(get("/couponapi/coupons/SUPERSALE"))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
