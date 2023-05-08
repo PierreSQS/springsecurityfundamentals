@@ -104,4 +104,11 @@ class CouponRestControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
+    @Test
+    void getCouponAuthenticatedUserAskBadCodeFormat() throws Exception {
+        mockMvc.perform(get("/couponapi/coupons/SUPERSALE123")
+                .with(user("mockuser@bailey.com").password("pwd").roles("USER")))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
 }

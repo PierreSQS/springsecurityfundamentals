@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .httpBasic()
         .and()
                 .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET,"/couponapi/coupons/**")
+                .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}")
                     .hasAnyRole("ADMIN","USER")
                     .requestMatchers(HttpMethod.POST,"/couponapi/coupons").hasRole("ADMIN")
         .and()
