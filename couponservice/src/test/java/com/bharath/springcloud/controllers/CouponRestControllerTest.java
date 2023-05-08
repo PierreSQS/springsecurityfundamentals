@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,8 +38,6 @@ class CouponRestControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
-    CouponRepo couponRepo;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +48,7 @@ class CouponRestControllerTest {
     }
 
     @Test
-    void create() throws Exception {
+    void createCouponAdmin() throws Exception {
         // given
         Coupon savedCoupon = new Coupon();
         savedCoupon.setCode(coupon.getCode());
@@ -60,7 +59,7 @@ class CouponRestControllerTest {
         given(couponRepoMock.save(any())).willReturn(savedCoupon);
 
         mockMvc.perform(post("/couponapi/coupons")
-                        .with(user("mock@bailey.com").password("pwd").roles("ADMIN"))
+                        .with(user("mockadmin@bailey.com").password("pwd").roles("ADMIN"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(coupon)))
                 .andExpect(status().isOk())
@@ -70,6 +69,59 @@ class CouponRestControllerTest {
     }
 
     @Test
-    void getCoupon() {
+    void createCouponNotAdmin() throws Exception {
+        // given
+        Coupon savedCoupon = new Coupon();
+        savedCoupon.setCode(coupon.getCode());
+        savedCoupon.setDiscount(coupon.getDiscount());
+        savedCoupon.setExpDate(coupon.getExpDate());
+        savedCoupon.setId(1L);
+
+        given(couponRepoMock.save(any())).willReturn(savedCoupon);
+
+        // when , then
+        mockMvc.perform(post("/couponapi/coupons")
+                        .with(user("mockuser@bailey.com").password("pwd").roles("USER"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(coupon)))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @Test
+    void getCouponUserAuthenticated() throws Exception {
+        // given
+        Coupon savedCoupon = new Coupon();
+        savedCoupon.setCode(coupon.getCode());
+        savedCoupon.setDiscount(coupon.getDiscount());
+        savedCoupon.setExpDate(coupon.getExpDate());
+        savedCoupon.setId(1L);
+
+        given(couponRepoMock.findByCode(any())).willReturn(savedCoupon);
+
+        // when , then
+        mockMvc.perform(get("/couponapi/coupons/SUPERSALE")
+                        .with(user("mockuser@bailey.com").password("pwd").roles("USER")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.code").value("SUPERSALE"))
+                .andDo(print());
+    }
+
+    @Test
+    void getCouponNotAuthenticated() throws Exception {
+        // given
+        Coupon savedCoupon = new Coupon();
+        savedCoupon.setCode(coupon.getCode());
+        savedCoupon.setDiscount(coupon.getDiscount());
+        savedCoupon.setExpDate(coupon.getExpDate());
+        savedCoupon.setId(1L);
+
+        given(couponRepoMock.findByCode(any())).willReturn(savedCoupon);
+
+        // when , then
+        mockMvc.perform(get("/couponapi/coupons/SUPERSALE"))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
     }
 }
