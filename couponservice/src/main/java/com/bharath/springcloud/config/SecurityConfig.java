@@ -15,9 +15,9 @@ public class SecurityConfig {
                 .httpBasic()
         .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}")
+                .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showCreateCoupon")
                     .hasAnyRole("ADMIN","USER")
-                    .requestMatchers(HttpMethod.POST,"/couponapi/coupons").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/couponapi/coupons","/saveCoupon").hasRole("ADMIN")
         .and()
                 .csrf().disable();
 
