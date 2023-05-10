@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showCreateCoupon","showGetCoupon")
                     .hasAnyRole("ADMIN","USER")
                 .requestMatchers(HttpMethod.POST,"/couponapi/coupons","/saveCoupon").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/getCoupon").hasRole("USER")
         .and()
                 .csrf().disable();
 
