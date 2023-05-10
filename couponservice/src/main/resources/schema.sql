@@ -1,5 +1,3 @@
-use bharath_security_sect5_chap42_db;
-
 CREATE TABLE COUPON(
 id int AUTO_INCREMENT PRIMARY KEY,
 code varchar(20) UNIQUE,
