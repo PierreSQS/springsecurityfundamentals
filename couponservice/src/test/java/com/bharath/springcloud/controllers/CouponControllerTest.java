@@ -17,6 +17,8 @@ import org.springframework.util.MultiValueMap;
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,6 +83,21 @@ class CouponControllerTest {
     }
 
     @Test
-    void getCoupon() {
+    void getCoupon() throws Exception {
+        // given
+        MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("code",coupon.getCode());
+        multiValueMap.add("discount",coupon.getDiscount().toString());
+        multiValueMap.add("expDate",coupon.getExpDate());
+
+        given(couponRepoMock.findByCode(anyString())).willReturn(coupon);
+
+        mockMvc.perform(post("/getCoupon")
+                        .with(user("MockUser").password("PWD").roles("USER"))
+                        .params(multiValueMap))
+                .andExpect(status().isOk())
+                .andExpect(view().name("couponDetails"))
+                .andExpect(content().string(containsString("<title>Coupon Details</title>")))
+                .andDo(print());
     }
 }
