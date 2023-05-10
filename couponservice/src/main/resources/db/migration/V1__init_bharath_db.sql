@@ -1,12 +1,12 @@
 USE bharath_security_sect5_chap42_db;
 
-DROP TABLE if exists coupon;
+-- DROP TABLE if exists USER_ROLE;
 
-DROP TABLE if exists USER;
+-- DROP TABLE if exists coupon;
 
-DROP TABLE if exists ROLE;
+-- DROP TABLE if exists USER;
 
-DROP TABLE if exists USER_ROLE;
+-- DROP TABLE if exists ROLE;
 
 CREATE TABLE COUPON(
     id       int AUTO_INCREMENT PRIMARY KEY,
