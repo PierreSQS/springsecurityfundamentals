@@ -71,7 +71,13 @@ class CouponControllerTest {
     }
 
     @Test
-    void showGetCoupon() {
+    @WithMockUser(username = "MockUser", roles = {"USER"})
+    void showGetCoupon() throws Exception {
+        mockMvc.perform(get("/showGetCoupon"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("getCoupon"))
+                .andExpect(content().string(containsString("<title>Get Coupon</title>")))
+                .andDo(print());
     }
 
     @Test
