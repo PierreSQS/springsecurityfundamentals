@@ -100,4 +100,13 @@ class CouponControllerTest {
                 .andExpect(content().string(containsString("<title>Coupon Details</title>")))
                 .andDo(print());
     }
+
+    @Test
+    void showLoginPage() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andExpect(content().string(containsString("<title>User Login</title>")))
+                .andDo(print());
+    }
 }

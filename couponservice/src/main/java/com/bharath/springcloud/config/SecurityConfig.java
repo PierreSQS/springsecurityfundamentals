@@ -14,6 +14,8 @@ public class SecurityConfig {
         httpSecurity
                 .httpBasic()
         .and()
+                .formLogin().loginPage("/login").permitAll()
+        .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/","/resources/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showCreateCoupon","showGetCoupon")
