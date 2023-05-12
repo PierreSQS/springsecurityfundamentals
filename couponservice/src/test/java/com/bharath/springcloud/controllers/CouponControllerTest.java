@@ -102,11 +102,21 @@ class CouponControllerTest {
     }
 
     @Test
+    @WithMockUser
     void showLoginPage() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
                 .andExpect(content().string(containsString("<title>User Login</title>")))
+                .andDo(print());
+    }
+    @Test
+    @WithMockUser
+    void showIndexPage() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(content().string(containsString("<title>Coupon Home</title>")))
                 .andDo(print());
     }
 }
