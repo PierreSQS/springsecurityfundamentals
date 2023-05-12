@@ -46,7 +46,7 @@ class CouponControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "MockUser", roles = {"USER"})
+    @WithMockUser(username = "MockAdmin", roles = {"ADMIN"})
     void showCreateCouponAuthenticated() throws Exception {
         mockMvc.perform(get("/showCreateCoupon"))
                 .andExpect(status().isOk())
@@ -71,6 +71,13 @@ class CouponControllerTest {
                 .andExpect(content().string(containsString("Coupon got created successfully!!")))
                 .andDo(print());
     }
+    @Test
+    void saveUserAuthenticated() throws Exception {
+        mockMvc.perform(post("/saveCoupon")
+                        .with(user("mockuser@ferguson.com").password("pwd").roles("USER")))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
 
     @Test
     @WithMockUser(username = "MockUser", roles = {"USER"})
@@ -83,7 +90,7 @@ class CouponControllerTest {
     }
 
     @Test
-    void getCoupon() throws Exception {
+    void getCouponUser() throws Exception {
         // given
         MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
         multiValueMap.add("code",coupon.getCode());
@@ -94,6 +101,24 @@ class CouponControllerTest {
 
         mockMvc.perform(post("/getCoupon")
                         .with(user("MockUser").password("PWD").roles("USER"))
+                        .params(multiValueMap))
+                .andExpect(status().isOk())
+                .andExpect(view().name("couponDetails"))
+                .andExpect(content().string(containsString("<title>Coupon Details</title>")))
+                .andDo(print());
+    }
+    @Test
+    void getCouponAdmin() throws Exception {
+        // given
+        MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("code",coupon.getCode());
+        multiValueMap.add("discount",coupon.getDiscount().toString());
+        multiValueMap.add("expDate",coupon.getExpDate());
+
+        given(couponRepoMock.findByCode(anyString())).willReturn(coupon);
+
+        mockMvc.perform(post("/getCoupon")
+                        .with(user("MockAdmin").password("PWD").roles("ADMIN"))
                         .params(multiValueMap))
                 .andExpect(status().isOk())
                 .andExpect(view().name("couponDetails"))

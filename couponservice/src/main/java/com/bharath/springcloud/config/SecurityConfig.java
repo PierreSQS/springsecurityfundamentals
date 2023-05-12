@@ -25,10 +25,11 @@ public class SecurityConfig {
         .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/","/resources/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showCreateCoupon","showGetCoupon")
+                .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showGetCoupon")
                     .hasAnyRole("ADMIN","USER")
                 .requestMatchers(HttpMethod.POST,"/couponapi/coupons","/saveCoupon").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,"/getCoupon").hasRole("USER")
+                .requestMatchers(HttpMethod.POST,"/getCoupon").hasAnyRole("ADMIN","USER")
+                .requestMatchers(HttpMethod.GET,"/showCreateCoupon").hasRole("ADMIN")
         .and()
                 .csrf().disable();
 
