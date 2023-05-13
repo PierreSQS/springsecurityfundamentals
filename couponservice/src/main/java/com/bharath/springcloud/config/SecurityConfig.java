@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .formLogin().loginPage("/login").permitAll()
         .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/","/resources/**").permitAll()
+                .requestMatchers("/","/showReg","/resources/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/couponapi/coupons/{code:^[A-Z]*$}","/showGetCoupon")
                     .hasAnyRole(ADMIN_ROLE, USER_ROLE)
                 .requestMatchers(HttpMethod.POST,"/couponapi/coupons","/saveCoupon").hasRole(ADMIN_ROLE)
