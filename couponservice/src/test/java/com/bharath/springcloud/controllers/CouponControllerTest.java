@@ -29,7 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityConfig.class)
 class CouponControllerTest {
 
+    // Begin - Test Data
     Coupon coupon;
+    MultiValueMap<String,String> multiValueMap;
+    // Begin - Test Data
+
 
     @Autowired
     MockMvc mockMvc;
@@ -43,26 +47,32 @@ class CouponControllerTest {
         coupon.setCode("SUPERSALE");
         coupon.setDiscount(BigDecimal.TEN);
         coupon.setExpDate("12/12/2023");
+
+        multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("code",coupon.getCode());
+        multiValueMap.add("discount",coupon.getDiscount().toString());
+        multiValueMap.add("expDate",coupon.getExpDate());
     }
 
     @Test
     @WithMockUser(username = "MockAdmin", roles = {"ADMIN"})
-    void showCreateCouponAuthenticated() throws Exception {
+    void showCreateCouponAdminAuthenticated() throws Exception {
         mockMvc.perform(get("/showCreateCoupon"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("createCoupon"))
                 .andExpect(content().string(containsString("<title>Create Coupon</title>")))
                 .andDo(print());
     }
+    @Test
+    @WithMockUser(username = "MockUser")
+    void showCreateCouponUserAuthenticated() throws Exception {
+        mockMvc.perform(get("/showCreateCoupon"))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
 
     @Test
     void saveAdminAuthenticated() throws Exception {
-        // given
-        MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("code",coupon.getCode());
-        multiValueMap.add("discount",coupon.getDiscount().toString());
-        multiValueMap.add("expDate",coupon.getExpDate());
-
         mockMvc.perform(post("/saveCoupon")
                         .with(user("mockadmin@bailey.com").password("pwd").roles("ADMIN"))
                         .params(multiValueMap))
@@ -80,7 +90,7 @@ class CouponControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "MockUser", roles = {"USER"})
+    @WithMockUser(username = "MockUser")
     void showGetCoupon() throws Exception {
         mockMvc.perform(get("/showGetCoupon"))
                 .andExpect(status().isOk())
@@ -92,13 +102,9 @@ class CouponControllerTest {
     @Test
     void getCouponUser() throws Exception {
         // given
-        MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("code",coupon.getCode());
-        multiValueMap.add("discount",coupon.getDiscount().toString());
-        multiValueMap.add("expDate",coupon.getExpDate());
-
         given(couponRepoMock.findByCode(anyString())).willReturn(coupon);
 
+        // when, then
         mockMvc.perform(post("/getCoupon")
                         .with(user("MockUser").password("PWD").roles("USER"))
                         .params(multiValueMap))
@@ -110,13 +116,9 @@ class CouponControllerTest {
     @Test
     void getCouponAdmin() throws Exception {
         // given
-        MultiValueMap<String,String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("code",coupon.getCode());
-        multiValueMap.add("discount",coupon.getDiscount().toString());
-        multiValueMap.add("expDate",coupon.getExpDate());
-
         given(couponRepoMock.findByCode(anyString())).willReturn(coupon);
 
+        // when, then
         mockMvc.perform(post("/getCoupon")
                         .with(user("MockAdmin").password("PWD").roles("ADMIN"))
                         .params(multiValueMap))
