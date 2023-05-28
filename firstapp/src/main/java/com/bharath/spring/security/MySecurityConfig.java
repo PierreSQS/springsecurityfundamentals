@@ -14,7 +14,9 @@ public class MySecurityConfig  {
 
 	@Bean
 	public UserDetailsService userDetailService() {
-		UserDetails user = User.withUsername("tom").password("{noop}cruise").roles("read").build();
+		UserDetails user = User.withUsername("tom")
+				.password("{bcrypt}$2a$10$a6ymiGaZevkW.DYyZszpheB2sRxaQ/GhWb4YFJaLIPrBR/Tr2ce.y") // cruise
+				.roles("read").build();
 
 		return new InMemoryUserDetailsManager(user);
 
