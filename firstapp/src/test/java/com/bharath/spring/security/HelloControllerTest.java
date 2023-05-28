@@ -47,9 +47,9 @@ class HelloControllerTest {
 
     @Test
     void helloRedirectToLoginPage() throws Exception {
-        // httpBasic doesn't work here since formlogin-Authentication
+        // now httpBasic works here since http basic-Authentication set in SecurityConfig
         mockMvc.perform(get("/hello").with(httpBasic("tom","cruise")))
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 

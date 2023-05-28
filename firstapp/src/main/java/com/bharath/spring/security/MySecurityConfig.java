@@ -30,7 +30,8 @@ public class MySecurityConfig  {
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-				.formLogin(Customizer.withDefaults());
+				.formLogin(Customizer.withDefaults())
+				.httpBasic(Customizer.withDefaults()); // to make curl and postman tests possible
 
 		return http.build();
 	}
