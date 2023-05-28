@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * New Config since SB3.0.1 !!!!
+ * New Config since SB3.1.0 !!!!
  */
 @Configuration
 public class SecurityConfig {
@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
              .httpBasic(Customizer.withDefaults())
-             .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET,"/productapi/products/**")
+             .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET,"/productapi/products/{productID:^[1-9]*$}")
                      .hasAnyRole("ADMIN","USER")
                      .requestMatchers(HttpMethod.POST,"/productapi/products").hasRole("ADMIN"))
 
