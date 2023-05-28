@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/productapi")
 public class ProductRestController {
@@ -26,14 +28,15 @@ public class ProductRestController {
 	@PostMapping("/products")
 	public Product create(@RequestBody Product product) {
 		Coupon coupon = restTemplate.getForObject(couponServiceURL + product.getCouponCode(), Coupon.class);
-		product.setPrice(product.getPrice().subtract(coupon.getDiscount()));
+		product.setPrice(product.getPrice().subtract(coupon != null ? coupon.getDiscount() : BigDecimal.ZERO));
 		return productRepo.save(product);
 
 	}
 
 	@GetMapping("/products/{productID}")
 	public Product getProductByID(@PathVariable Long productID) {
-		return productRepo.findById(productID).orElseThrow(() -> new RuntimeException("Product Not Found!!"));
+		return productRepo.findById(productID).orElseThrow(() ->
+				new RuntimeException("Product with ID="+ productID +" Not Found!!"));
 	}
 
 
