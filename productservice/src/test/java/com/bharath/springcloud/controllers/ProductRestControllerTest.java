@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -17,10 +18,10 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductRestController.class)
 @Import(SecurityConfig.class)
@@ -44,6 +45,7 @@ class ProductRestControllerTest {
     }
 
     @Test
+    @WithMockUser() // role = {"USER"} per default
     void getProductByIDWithUserRole() throws Exception {
         // given
         Product savedProduct = new Product();
@@ -55,11 +57,18 @@ class ProductRestControllerTest {
         given(productRepoMock.findById(anyLong())).willReturn(Optional.of(savedProduct));
 
         // when then
-        mockMvc.perform(get("/productapi/products/{productID}",1L)
-                        .with(user("mockuser@bailey.com").password("pwd").roles("USER")))
+        mockMvc.perform(get("/productapi/products/{productID}",1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(equalTo(1)))
                 .andExpect(jsonPath("$.name").value(equalTo("USB-Storage")))
+                .andDo(print());
+    }
+
+    @Test
+    void getProductByIDUnauthenticated() throws Exception {
+        // when then
+        mockMvc.perform(get("/productapi/products/{productID}",1L))
+                .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 }
