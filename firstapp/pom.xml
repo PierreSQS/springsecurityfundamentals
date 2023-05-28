@@ -33,6 +33,13 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
+		<!-- TO PREVENT CVE WARNING -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.0</version>
+		</dependency>
+
 		<!-- NECESSARY FOR SCRYPT -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
