@@ -18,9 +18,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
              .httpBasic(Customizer.withDefaults())
-             .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET,"/productapi/products/{productID:^[1-9]*$}")
-                     .hasAnyRole("ADMIN","USER")
-                     .requestMatchers(HttpMethod.POST,"/productapi/products").hasRole("ADMIN"))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET,"/productapi/products/{productID:^[1-9]*$}")
+                            .hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.POST,"/productapi/products").hasRole("ADMIN"))
 
             .csrf(AbstractHttpConfigurer::disable);
 
