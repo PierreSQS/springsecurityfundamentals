@@ -18,14 +18,11 @@ public class ProductRestController {
 
 	private final RestTemplate restTemplate;
 
-	private final RestTemplateBuilder restTemplateBuilder;
-
 	@Value("${couponService.url}")
 	private String couponServiceURL;
 
 	public ProductRestController(ProductRepo productRepo, RestTemplateBuilder restTemplateBuilder) {
 		this.productRepo = productRepo;
-		this.restTemplateBuilder = restTemplateBuilder;
 		this.restTemplate = restTemplateBuilder.build();
 	}
 
