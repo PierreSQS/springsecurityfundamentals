@@ -23,7 +23,8 @@ public class ProductRestController {
 
 	public ProductRestController(ProductRepo productRepo, RestTemplateBuilder restTemplateBuilder) {
 		this.productRepo = productRepo;
-		this.restTemplate = restTemplateBuilder.build();
+		this.restTemplate = restTemplateBuilder
+				.basicAuthentication("doug@bailey.com","doug").build();
 	}
 
 	@PostMapping("/products")

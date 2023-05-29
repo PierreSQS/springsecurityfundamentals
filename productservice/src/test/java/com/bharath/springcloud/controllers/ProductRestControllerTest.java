@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +35,11 @@ class ProductRestControllerTest {
 
     @MockBean
     ProductRepo productRepoMock;
+
+    // Not in use at the moment, just to allow the DI to inject it in the controller
+    // TODO check how to Mock it
+    @MockBean
+    RestTemplateBuilder restTemplateBuilderMock;
 
     @BeforeEach
     void setUp() {
