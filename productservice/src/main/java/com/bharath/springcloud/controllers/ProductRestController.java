@@ -4,6 +4,7 @@ import com.bharath.springcloud.dto.Coupon;
 import com.bharath.springcloud.model.Product;
 import com.bharath.springcloud.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,12 +18,15 @@ public class ProductRestController {
 
 	private final RestTemplate restTemplate;
 
+	private final RestTemplateBuilder restTemplateBuilder;
+
 	@Value("${couponService.url}")
 	private String couponServiceURL;
 
-	public ProductRestController(ProductRepo productRepo, RestTemplate restTemplate) {
+	public ProductRestController(ProductRepo productRepo, RestTemplateBuilder restTemplateBuilder) {
 		this.productRepo = productRepo;
-		this.restTemplate = restTemplate;
+		this.restTemplateBuilder = restTemplateBuilder;
+		this.restTemplate = restTemplateBuilder.build();
 	}
 
 	@PostMapping("/products")
