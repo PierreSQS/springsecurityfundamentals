@@ -1,7 +1,7 @@
--- USE bharath_security_sect5_chap42_db;
+USE bharath_security_sect5_chap42_db;
 
 -- AWS DB
-USE bharhatspringsecuritydb;
+-- USE bharhatspringsecuritydb;
 
 -- DROP TABLE if exists USER_ROLE;
 
