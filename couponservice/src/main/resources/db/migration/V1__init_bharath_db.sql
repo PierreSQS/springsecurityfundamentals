@@ -1,4 +1,7 @@
-USE bharath_security_sect5_chap42_db;
+-- USE bharath_security_sect5_chap42_db;
+
+-- AWS DB
+USE bharhatspringsecuritydb;
 
 -- DROP TABLE if exists USER_ROLE;
 
@@ -8,14 +11,14 @@ USE bharath_security_sect5_chap42_db;
 
 -- DROP TABLE if exists ROLE;
 
-CREATE TABLE COUPON(
+CREATE TABLE coupon(
     id       int AUTO_INCREMENT PRIMARY KEY,
     code     varchar(20) UNIQUE            ,
     discount decimal(8,3)                  ,
     exp_date varchar(100)
 );
 
-CREATE TABLE USER(
+CREATE TABLE user(
     ID         INT NOT NULL AUTO_INCREMENT,
     FIRST_NAME VARCHAR(20)                ,
     LAST_NAME  VARCHAR(20)                ,
@@ -25,13 +28,13 @@ CREATE TABLE USER(
     UNIQUE KEY (EMAIL)
 );
 
-CREATE TABLE ROLE(
+CREATE TABLE role(
     ID   INT NOT NULL AUTO_INCREMENT,
     NAME VARCHAR(20)                ,
     PRIMARY KEY (ID)
 );
         
-CREATE TABLE USER_ROLE
+CREATE TABLE user_role
 (
     USER_ID int                              ,
     ROLE_ID int                              ,
